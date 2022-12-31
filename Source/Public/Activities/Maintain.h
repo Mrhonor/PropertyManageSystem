@@ -8,11 +8,7 @@ class Report;
 class Maintain : public Activity
 {
 protected:
-    std::string DispatcherID;
-    std::string WorkerID;
-    time_t MaintainStartTime;
-    time_t MaintainEndTime;
-    std::string MaintainDescription;
+    TMaintainRecord MaintainRecord;
     Report* CorReport;
 
 public:

@@ -23,13 +23,29 @@ typedef enum{
     Working
 }EWorkerState;
 
+typedef enum{
+    MaintainType,
+    ComplaintType,
+    EvaluateType
+}EActivityType;
+
 // 评价内容
 typedef struct 
 {
     int ResponseTime;
     int ServiceAttitude;
     int Satisfaction;
-}SEvaluteContent;
+}TEvaluteContent;
+
+// 维修记录
+typedef struct
+{
+    std::string DispatcherID;
+    std::string WorkerID;
+    time_t MaintainStartTime;
+    time_t MaintainEndTime;
+    std::string MaintainDescription;
+}TMaintainRecord;
 
 
 #endif // __ACTIVTITY__

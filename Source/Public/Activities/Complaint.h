@@ -3,17 +3,24 @@
 
 #include "Activity.h"
 #include <map>
+#include <set>
+
+class Report;
 
 class Complaint : public Activity
 {
 protected:
-    std::string ComplaintContend;
+    std::string ComplaintContent;
 
     // 情况说明。key:工人ID
     std::map<std::string, std::string> SituationExplain;
 
     // 与客户沟通结果
     std::string CommunicationRecord;
+
+    Report* CurReport;
+
+    void getRelatePersonID(std::set<std::string>&);
 
 public:
     Complaint(std::string);
@@ -23,14 +30,15 @@ public:
     virtual void activityExecute();
     virtual void activityFinished();
 
-    std::string getComplaintContend();
-    void setComplaintContend(std::string);
+    std::string getComplaintContent();
+    void setComplaintContent(std::string);
 
     std::string getCommunicationRecord();
     void setCommunicationRecord(std::string);
 
     const std::map<std::string, std::string>& getSituationExplain();
     void insertSituationExplain(std::string workerID, std::string explain);
+    void eraseSituationExplain(std::string workerID);
 };
 
 

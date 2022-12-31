@@ -13,7 +13,10 @@ protected:
 
     virtual void activityFinished()=0;
 
+    EActivityType ActivityType;
 public:
+    virtual EActivityType getActivityType();
+
     Activity();
 
     ~Activity();

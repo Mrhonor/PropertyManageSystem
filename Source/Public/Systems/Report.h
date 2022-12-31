@@ -38,7 +38,7 @@ public:
     EReportSource getReportSource();
     std::time_t getReportTime();
     Activity* getCurActiveActivity();
-    std::vector<Activity>::const_iterator getActivityListConstIterator();
+    const std::vector<Activity>& getActivityList();
 
     // 获取维修记录
     void getMaintainList(std::vector<Maintain>&);

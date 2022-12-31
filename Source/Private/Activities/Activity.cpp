@@ -16,3 +16,7 @@ void Activity::active(){
     activityExecute();
     activityFinished();
 }
+
+EActivityType Activity::getActivityType(){
+    return this->ActivityType;
+}

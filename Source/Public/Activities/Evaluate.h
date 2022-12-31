@@ -6,14 +6,13 @@
 class Evaluate : public Activity
 {
 protected:
-    std::string EvaluateContent;
+    TEvaluteContent EvaluateContent;
 public:
-    Evaluate(std::string);
+    Evaluate(TEvaluteContent);
     ~Evaluate();
 
-    std::string getEvaluateContent();
-    void setEvaluateContent(std::string);
-
+    TEvaluteContent getEvaluateContent();
+    void setEvaluateContent(TEvaluteContent);
 
     virtual void activityStart();
     virtual void activityExecute();
