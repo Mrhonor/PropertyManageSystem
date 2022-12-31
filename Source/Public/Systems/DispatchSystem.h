@@ -18,6 +18,9 @@ public:
 
     // 调度函数
     void Dispatch(std::string dispatcherID, Report& dispatchReport);
+
+    // 添加worker
+    int addWorker(Worker &worker);
 };
 
 

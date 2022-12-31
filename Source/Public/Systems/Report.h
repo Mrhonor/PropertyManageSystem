@@ -28,10 +28,11 @@ protected:
     std::time_t ReportTime;
 
 public:
-    Report();
+    Report(std::string reportID);
     ~Report();
 
     std::string getID();
+    void setOwnerID(std::string ownerid);
     std::string getOwnerID();
     EFaultType getFaultType();
     void setFaultType(EFaultType);
@@ -41,7 +42,7 @@ public:
     const std::vector<Activity>& getActivityList();
 
     // 获取维修记录
-    void getMaintainList(std::vector<Maintain>&);
+    //void getMaintainList(std::vector<Maintain>&);
 
     // 统计工时
     int countAllWorkTime();
