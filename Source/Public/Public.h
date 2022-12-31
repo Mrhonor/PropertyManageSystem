@@ -47,5 +47,10 @@ typedef struct
     std::string MaintainDescription;
 }TMaintainRecord;
 
+typedef enum{
+    Normal,
+    FaultTypeWrong,
+    Unfinish
+}EMaintainFlag;
 
 #endif // __ACTIVTITY__

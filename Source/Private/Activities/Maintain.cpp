@@ -1,4 +1,8 @@
 #include "Activities/Maintain.h"
+#include "Systems/InteractiveSystem.h"
+#include "Systems/PerformanceSystem.h"
+#include "Systems/DispatchSystem.h"
+#include "Systems/Report.h"
 
 using namespace std;
 
@@ -26,7 +30,7 @@ string Maintain::getWorkerID(){
 }
 
 void Maintain::setWorkerID(string newWorkerID){
-    this->MaintainRecord.WorkerID = WorkerID;
+    this->MaintainRecord.WorkerID = newWorkerID;
 }
 
 string Maintain::getMaintainDescription(){
@@ -34,7 +38,7 @@ string Maintain::getMaintainDescription(){
 }
 
 void Maintain::setMaintainDescription(string newMaintainDescription){
-    this->MaintainRecord.MaintainDescription = MaintainDescription;
+    this->MaintainRecord.MaintainDescription = newMaintainDescription;
 }
 
 time_t Maintain::getMaintainStartTime(){
@@ -61,16 +65,57 @@ void Maintain::setCorReport(Report* newCorReport){
     this->CorReport = newCorReport;
 }
 
+TMaintainRecord Maintain::getMaintainRecord(){
+    return this->MaintainRecord;
+}
+
+time_t Maintain::getLaborHour(){
+    return this->MaintainRecord.MaintainEndTime - this->MaintainRecord.MaintainStartTime;
+}
+
 void Maintain::activityStart(){
+    InteractiveSystem* interactiveSystemInstance = InteractiveSystem::getInstance();
+    this->setMaintainStartTime(interactiveSystemInstance->getMockMaintainStartTime());
 
 }
 
 void Maintain::activityExecute(){
-
+    InteractiveSystem* interactiveSystemInstance = InteractiveSystem::getInstance();
+    this->setMaintainDescription(interactiveSystemInstance->getMockMaintainDescription());
 }
 
 void Maintain::activityFinished(){
+    InteractiveSystem* interactiveSystemInstance = InteractiveSystem::getInstance();
+    PerformanceSystem* PerformanceSystemInstance = PerformanceSystem::getInstance();
+    EMaintainFlag eventFlag;
+    time_t endTime;
+    interactiveSystemInstance->getMockMaintainEndEvent(endTime, eventFlag);
 
+
+    this->setMaintainEndTime(endTime);
+    switch (eventFlag)
+    {
+        case EMaintainFlag::FaultTypeWrong:
+        {
+            EFaultType newFaultType = interactiveSystemInstance->getMockFaultType();
+            this->CorReport->setFaultType(newFaultType);
+            DispatchSystem* DispatchSystemInstance = DispatchSystem::getInstance();
+            string dispatcherID = interactiveSystemInstance->getMockDispatcherID();
+            DispatchSystemInstance->Dispatch(dispatcherID, *this->CorReport);
+            break;
+        }
+        case EMaintainFlag::Unfinish:
+        {
+            Maintain newMaintain(getDispatcherID(), getWorkerID(), getCorReport());
+
+            this->CorReport->insertActivity(newMaintain);
+
+            break;
+        }
+        default:
+            break;
+    }
+    PerformanceSystemInstance->addWorkerLaborHour(getWorkerID(), getLaborHour());
 }
 
 

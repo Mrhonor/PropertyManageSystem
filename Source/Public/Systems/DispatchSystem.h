@@ -12,6 +12,7 @@ class DispatchSystem
 protected:
     std::vector<Worker> WorkerList;
     
+    
 public:
     DispatchSystem();
     ~DispatchSystem();

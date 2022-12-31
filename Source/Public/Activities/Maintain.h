@@ -37,6 +37,9 @@ public:
     Report* getCorReport();
     void setCorReport(Report*);
 
+    TMaintainRecord getMaintainRecord();
+
+    time_t getLaborHour();
 };
 
 

@@ -28,7 +28,7 @@ public:
     Report* generateReport(std::string ownerID, EFaultType faultType, EReportSource reportSource, std::time_t reportTime);
 
     // 生成评价
-    Evaluate* generateEvaluate(Report* corReport, SEvaluteContent evaluateContent);
+    Evaluate* generateEvaluate(Report* corReport, TEvaluteContent evaluateContent);
 
     // 生成投诉
     Complaint* generateComplaint(Report* corReport, std::string complaintContend);

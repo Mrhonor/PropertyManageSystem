@@ -4,20 +4,25 @@
 #include <Public.h>
 #include <map>
 
-class Maintain;
-
 class PerformanceSystem
 {
 protected:
-    // key：工人ID， 总工时
-    std::map<std::string, int> LaborHourMap;
-public:
     PerformanceSystem();
+    PerformanceSystem(const PerformanceSystem&);
+
+    static PerformanceSystem* Instance;
+    // key：工人ID， 总工时
+    std::map<std::string, std::time_t> LaborHourMap;
+
+
+public:
+    static PerformanceSystem* getInstance();
+
     ~PerformanceSystem();
 
     void getWorkerLaborHour(std::string);
 
-    void addWorkerLaborHour(std::string, const Maintain&);
+    void addWorkerLaborHour(std::string, std::time_t);
 };
 
 

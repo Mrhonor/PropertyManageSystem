@@ -1,5 +1,6 @@
 #include "Activities/Complaint.h"
 #include "Systems/Report.h"
+#include "Systems/InteractiveSystem.h"
 
 using namespace std;
 
@@ -48,15 +49,23 @@ void Complaint::eraseSituationExplain(string workerID){
 // }
 
 void Complaint::activityStart(){
-
+    set<string> relatedIDs;
+    this->CurReport->getRelatePersonID(relatedIDs);
+    InteractiveSystem* interactiveSystemInstance = InteractiveSystem::getInstance();
+    for(auto &i : relatedIDs){
+        string explain = interactiveSystemInstance->getMockSituationExplain(i);
+        this->insertSituationExplain(i, explain);
+    }
     
 }
 
 
 void Complaint::activityExecute(){
     // this->curReport
+    InteractiveSystem* interactiveSystemInstance = InteractiveSystem::getInstance();
+    this->setCommunicationRecord(interactiveSystemInstance->getMockCommunicationRecord()); 
 }
 
 void Complaint::activityFinished(){
-
+    
 }

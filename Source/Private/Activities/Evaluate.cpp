@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Evaluate::Evaluate(SEvaluteContent evaluateContent):Activity(), EvaluateContent(evaluateContent){
+Evaluate::Evaluate(TEvaluteContent evaluateContent):Activity(), EvaluateContent(evaluateContent){
     this->ActivityType = EActivityType::EvaluateType;
 }
 
@@ -10,11 +10,11 @@ Evaluate::~Evaluate(){
 
 }
 
-SEvaluteContent Evaluate::getEvaluateContent(){
+TEvaluteContent Evaluate::getEvaluateContent(){
     return this->EvaluateContent;
 }
 
-void Evaluate::setEvaluateContent(SEvaluteContent newEval){
+void Evaluate::setEvaluateContent(TEvaluteContent newEval){
     this->EvaluateContent = newEval;
 }
 
