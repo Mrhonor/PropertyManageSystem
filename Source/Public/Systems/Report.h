@@ -32,23 +32,31 @@ public:
     ~Report();
 
     std::string getID();
-    void setOwnerID(std::string ownerid);
+
     std::string getOwnerID();
+    void setOwnerID(std::string ownerid);
+    
     EFaultType getFaultType();
     void setFaultType(EFaultType);
+
     EReportSource getReportSource();
+    void setReportSource(EReportSource reportSource);
+
     std::time_t getReportTime();
+    void setReportTime(std::time_t ReportTime);
+
     Activity* getCurActiveActivity();
     const std::vector<Activity>& getActivityList();
 
     // 获取维修记录
     //void getMaintainList(std::vector<Maintain>&);
+    std::vector<TMaintainRecord> getMaintainRecords();
 
     // 统计工时
-    int countAllWorkTime();
+    time_t countAllWorkTime();
 
     // 插入新的活动
-    void insertActivity(Activity&);
+    void insertActivity(Activity &);
 };                
 
 

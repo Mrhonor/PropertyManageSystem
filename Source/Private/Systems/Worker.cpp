@@ -1,4 +1,4 @@
-#include "Worker.h"
+#include "Systems/Worker.h"
 
 Worker::Worker(std::string workerID, std::set<EFaultType> handleSet)
 {
@@ -35,4 +35,9 @@ bool Worker::checkHandleable(EFaultType faultType)
         return false;
     }
     return true;
+}
+
+std::string Worker::getWorkerID()
+{
+    return ID;
 }

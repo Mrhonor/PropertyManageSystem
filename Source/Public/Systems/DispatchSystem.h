@@ -22,6 +22,12 @@ public:
 
     // 添加worker
     int addWorker(Worker &worker);
+
+    // 更新worker状态
+    void updateWorkerState(std::string workerID, EWorkerState state);
+
+    //
+    int getWorkerIdxByID(std::string workerID);
 };
 
 

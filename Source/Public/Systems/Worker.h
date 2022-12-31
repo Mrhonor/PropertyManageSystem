@@ -12,6 +12,7 @@ protected:
     std::set<EFaultType> HandleableFaultType;
     EWorkerState CurState;
     Maintain* CurMaintain;
+    std::vector<std::string> ActivityIDList;
 
 public:
     Worker(std::string workerID,
@@ -27,6 +28,8 @@ public:
     Maintain* getCurMaintain();
 
     void setCurMaintain(Maintain *);
+
+    std::string getWorkerID();
 };
 
 

@@ -20,7 +20,11 @@ public:
 
     ~PerformanceSystem();
 
-    void getWorkerLaborHour(std::string);
+    static PerformanceSystem* Instance;
+public:
+    static PerformanceSystem* getInstance();
+
+    time_t getWorkerLaborHour(std::string);
 
     void addWorkerLaborHour(std::string, std::time_t);
 };
