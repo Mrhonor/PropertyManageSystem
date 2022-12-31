@@ -7,6 +7,8 @@
 class Activity
 {
 protected:
+    std::string ID;
+
     virtual void activityStart()=0;
 
     virtual void activityExecute()=0;
@@ -22,6 +24,11 @@ public:
     ~Activity();
 
     void active();
+
+    std::string getID();
+
+    void setID(std::string);
+
 };
 
 

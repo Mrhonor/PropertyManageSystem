@@ -87,6 +87,7 @@ void Maintain::activityExecute(){
 void Maintain::activityFinished(){
     InteractiveSystem* interactiveSystemInstance = InteractiveSystem::getInstance();
     PerformanceSystem* PerformanceSystemInstance = PerformanceSystem::getInstance();
+    DispatchSystem* DispatchSystemInstance = DispatchSystem::getInstance();
     EMaintainFlag eventFlag;
     time_t endTime;
     interactiveSystemInstance->getMockMaintainEndEvent(endTime, eventFlag);
@@ -99,9 +100,10 @@ void Maintain::activityFinished(){
         {
             EFaultType newFaultType = interactiveSystemInstance->getMockFaultType();
             this->CorReport->setFaultType(newFaultType);
-            DispatchSystem* DispatchSystemInstance = DispatchSystem::getInstance();
+            
             string dispatcherID = interactiveSystemInstance->getMockDispatcherID();
             DispatchSystemInstance->Dispatch(dispatcherID, *this->CorReport);
+            DispatchSystemInstance->updateWorkerState(this->getWorkerID(), EWorkerState::Idle);
             break;
         }
         case EMaintainFlag::Unfinish:
@@ -109,11 +111,15 @@ void Maintain::activityFinished(){
             Maintain newMaintain(getDispatcherID(), getWorkerID(), getCorReport());
 
             this->CorReport->insertActivity(newMaintain);
-
+            
             break;
         }
         default:
+        {
+            DispatchSystemInstance->updateWorkerState(this->getWorkerID(), EWorkerState::Idle);
             break;
+        }
+
     }
     PerformanceSystemInstance->addWorkerLaborHour(getWorkerID(), getLaborHour());
 }

@@ -20,3 +20,11 @@ void Activity::active(){
 EActivityType Activity::getActivityType(){
     return this->ActivityType;
 }
+
+std::string Activity::getID(){
+    return this->ID;
+}
+
+void Activity::setID(string newID){
+    this->ID = newID;
+}
