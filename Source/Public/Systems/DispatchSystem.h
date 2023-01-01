@@ -11,8 +11,7 @@ class DispatchSystem
 {
 protected:
     std::vector<Worker> WorkerList;
-    DispatchSystem();
-    DispatchSystem(const DispatchSystem&);
+    DispatchSystem(){};
 
     static DispatchSystem* Instance;
     
@@ -20,7 +19,7 @@ public:
 
     static DispatchSystem* getInstance();
 
-    ~DispatchSystem();
+    ~DispatchSystem(){};
 
     // 调度函数
     Activity* Dispatch(std::string dispatcherID, Report& dispatchReport);

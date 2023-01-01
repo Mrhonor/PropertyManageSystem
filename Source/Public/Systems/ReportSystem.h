@@ -12,8 +12,7 @@ class Complaint;
 class ReportSystem
 {
 protected:
-    ReportSystem();
-    ReportSystem(const ReportSystem&);
+    ReportSystem(){};
 
     static ReportSystem* Instance;
     // 报修列表：存储所有的报修

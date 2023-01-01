@@ -28,3 +28,16 @@ std::string Activity::getID(){
 void Activity::setID(string newID){
     this->ID = newID;
 }
+
+void Activity::activityStart(){
+
+}
+
+void Activity::activityExecute(){
+    
+}
+
+void Activity::activityFinished(){
+    
+}
+

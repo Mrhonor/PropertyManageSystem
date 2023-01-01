@@ -4,6 +4,20 @@
 #include "Activities/Complaint.h"
 #include "Activities/Evaluate.h"
 
+
+ReportSystem* ReportSystem::Instance = nullptr;
+
+ReportSystem* ReportSystem::getInstance(){
+    if(Instance == nullptr){
+        Instance = new ReportSystem();
+    }
+    return Instance;
+}
+
+ReportSystem::~ReportSystem(){
+    
+}
+
 Report* ReportSystem::generateReport(std::string ownerID,
                                     EFaultType faultType,
                                     EReportSource reportSource,

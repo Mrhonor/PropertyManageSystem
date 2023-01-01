@@ -21,5 +21,10 @@ add_executable(test Private/Activities/Maintain.cpp
                     Private/Activities/Complaint.cpp
                     Private/Activities/Evaluate.cpp
                     Private/Systems/DispatchSystem.cpp
+                    Private/Systems/InteractiveSystem.cpp
+                    Private/Systems/PerformanceSystem.cpp
+                    Private/Systems/ReportSystem.cpp
+                    Private/Systems/Report.cpp
+                    Private/Systems/Worker.cpp
                     test/test.cpp
                     )

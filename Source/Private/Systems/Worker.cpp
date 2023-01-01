@@ -6,6 +6,10 @@ Worker::Worker(std::string workerID, std::set<EFaultType> handleSet)
     HandleableFaultType = handleSet;
 }
 
+Worker::~Worker(){
+    
+}
+
 EWorkerState Worker::getCurState()
 {
     return CurState;

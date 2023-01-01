@@ -7,8 +7,7 @@
 class InteractiveSystem
 {
 protected:
-    InteractiveSystem();
-    InteractiveSystem(const InteractiveSystem&);
+    InteractiveSystem(){};
 
     static InteractiveSystem* Instance;
     
@@ -32,7 +31,7 @@ public:
 
     std::string MockDispatcherID;
 
-    ~InteractiveSystem();
+    ~InteractiveSystem(){};
 
     std::string getMockSituationExplain(std::string);
     

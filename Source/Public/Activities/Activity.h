@@ -9,11 +9,11 @@ class Activity
 protected:
     std::string ID;
 
-    virtual void activityStart()=0;
+    virtual void activityStart();
 
-    virtual void activityExecute()=0;
+    virtual void activityExecute();
 
-    virtual void activityFinished()=0;
+    virtual void activityFinished();
 
     EActivityType ActivityType;
 public:

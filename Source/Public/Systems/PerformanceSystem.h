@@ -7,8 +7,7 @@
 class PerformanceSystem
 {
 protected:
-    PerformanceSystem();
-    PerformanceSystem(const PerformanceSystem&);
+    PerformanceSystem(){};
 
     static PerformanceSystem* Instance;
     // key：工人ID， 总工时
@@ -18,12 +17,12 @@ protected:
 public:
     static PerformanceSystem* getInstance();
 
-    ~PerformanceSystem();
+    ~PerformanceSystem(){};
 
 
     time_t getWorkerLaborHour(std::string);
 
-    void addWorkerLaborHour(std::string, std::time_t);
+    void addWorkerLaborHour(std::string, const std::time_t&);
 };
 
 

@@ -1,5 +1,6 @@
 #include "Systems/Report.h"
 #include "Activities/Maintain.h"
+#include "Activities/Activity.h"
 
 Report::Report(std::string reportID)
 {
@@ -80,7 +81,7 @@ std::vector<TMaintainRecord> Report::getMaintainRecords()
         if (activity.getActivityType() == MaintainType)
         {
             TMaintainRecord mainrainRecord;
-            mainrainRecord = activity.getMaintainRecord();
+            mainrainRecord = ((Maintain*)&activity)->getMaintainRecord();
             maintainReords.push_back(mainrainRecord);
         }
     }
@@ -95,7 +96,7 @@ time_t Report::countAllWorkTime()
     {
         if (activity.getActivityType() == MaintainType)
         {
-            allWorkTime += activity.getLaborHour();
+            allWorkTime += ((Maintain*)&activity)->getLaborHour();
         }
     }
 
@@ -105,4 +106,14 @@ time_t Report::countAllWorkTime()
 void Report::insertActivity(Activity &activity)
 {
     ActivityList.push_back(activity);
+}
+
+void Report::getRelatePersonID(std::set<std::string>& ret){
+    // auto activityList = this->getActivityList();
+    for(auto &i : ActivityList){
+        if(i.getActivityType()==EActivityType::MaintainType){
+             
+            ret.insert(((Maintain*)&i)->getWorkerID());
+        }
+    }
 }

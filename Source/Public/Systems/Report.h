@@ -3,6 +3,7 @@
 
 #include <Public.h>
 #include <Activities/Activity.h>
+#include <set>
 
 class Maintain;
 
@@ -29,7 +30,7 @@ protected:
 
 public:
     Report(std::string reportID);
-    ~Report();
+    ~Report(){};
 
     std::string getID();
 
@@ -57,6 +58,8 @@ public:
 
     // 插入新的活动
     void insertActivity(Activity &);
+
+    void getRelatePersonID(std::set<std::string>&);
 };                
 
 

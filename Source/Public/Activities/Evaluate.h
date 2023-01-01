@@ -1,7 +1,7 @@
 #ifndef __EVALUATE__
 #define __EVALUATE__
 
-#include "Activity.h"
+#include "Activities/Activity.h"
 
 class Evaluate : public Activity
 {
@@ -14,9 +14,6 @@ public:
     TEvaluteContent getEvaluateContent();
     void setEvaluateContent(TEvaluteContent);
 
-    virtual void activityStart();
-    virtual void activityExecute();
-    virtual void activityFinished();
 };
 
 
