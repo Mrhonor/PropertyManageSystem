@@ -11,10 +11,15 @@ class DispatchSystem
 {
 protected:
     std::vector<Worker> WorkerList;
-    
+    DispatchSystem();
+    DispatchSystem(const DispatchSystem&);
+
+    static DispatchSystem* Instance;
     
 public:
-    DispatchSystem();
+
+    static DispatchSystem* getInstance();
+
     ~DispatchSystem();
 
     // 调度函数

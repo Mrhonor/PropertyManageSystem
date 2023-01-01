@@ -5,6 +5,15 @@
 #include "Activities/Activity.h"
 #include "Activities/Maintain.h"
 
+DispatchSystem* DispatchSystem::Instance = nullptr;
+
+DispatchSystem* DispatchSystem::getInstance(){
+    if(Instance == nullptr){
+        Instance = new DispatchSystem();
+    }
+    return Instance;
+}
+
 //添加工人
 int DispatchSystem::addWorker(Worker &worker)
 {
