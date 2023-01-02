@@ -30,6 +30,10 @@ public:
     void setCurMaintain(Maintain *);
 
     std::string getWorkerID();
+
+    void addActivityIDList(std::string);
+
+    void removeActivityIDList(std::string);
 };
 
 

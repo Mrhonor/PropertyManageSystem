@@ -52,28 +52,29 @@ Activity* DispatchSystem::Dispatch(std::string dispatcherID, Report& dispatchRep
 
 void DispatchSystem::updateWorkerState(std::string workerID, EWorkerState state)
 {
-    int workerIdx = -1;
-    workerIdx = getWorkerIdxByID(workerID);
+    Worker* targetWorker = getWorkerByID(workerID);
 
-    if (workerIdx < 0)
+    if (targetWorker == nullptr)
     {
         //不应该走到这里！！
         std::cout<<"updateWorkerState Failed"<<std::endl;
         return ;
     }
+
+    targetWorker->setCurState(state);
 }
 
-int DispatchSystem::getWorkerIdxByID(std::string workerID)
+Worker* DispatchSystem::getWorkerByID(std::string workerID)
 {
     for (int i=0; i<WorkerList.size(); i++)
     {
         if (WorkerList[i].getWorkerID() == workerID)
         {
-            return i;
+            return &WorkerList[i];
         }
     }
 
-    return -1;
+    return nullptr;
 }
 
 

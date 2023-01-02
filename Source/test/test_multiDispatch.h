@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void test_NormalWork(){
+void test_multiDispatch(){
     InteractiveSystem* interactiveSystemInstance = InteractiveSystem::getInstance();
     DispatchSystem* DispatchSystemInstance = DispatchSystem::getInstance();
     ReportSystem* ReportSystemInstance = ReportSystem::getInstance();
@@ -64,36 +64,15 @@ void test_NormalWork(){
     MaintainEndTime.tm_hour = 18;
     interactiveSystemInstance->MockMaintainEndTime = mktime(&MaintainEndTime);
 
-    interactiveSystemInstance->MaintainEndFlag = EMaintainFlag::Normal;
+    interactiveSystemInstance->MaintainEndFlag = EMaintainFlag::FaultTypeWrong;
+    interactiveSystemInstance->MockFaultType = EFaultType::FaultType2;
+    string dispatcherID2 = "dispatcher2";
+    interactiveSystemInstance->MockDispatcherID = dispatcherID2;
 
     normalMaintain->active();
 
-    assert(normalMaintain->getWorkerID() == workerID1);
-    assert(normalMaintain->getDispatcherID() == dispatcherID);
-    assert(normalMaintain->getMaintainStartTime() == mktime(&MaintainStartTime));
-    assert(normalMaintain->getMaintainEndTime() == mktime(&MaintainEndTime));
-    assert(normalMaintain->getMaintainDescription() == interactiveSystemInstance->MockMaintainDescription);
+    assert(reportNormal->getFaultType() == EFaultType::FaultType2);
+    assert(((Maintain*)(reportNormal->getCurActiveActivity()))->getWorkerID() == workerID2);
 
-    // 投诉流程
-    Complaint* complaintNormal = ReportSystemInstance->generateComplaint(reportNormal, "投诉内容");
 
-    interactiveSystemInstance->MockSituationExplain.insert(pair<string, string>(workerID1, "worker1-情况说明"));
-    interactiveSystemInstance->MockSituationExplain.insert(pair<string, string>(dispatcherID, "dispatcher1-情况说明"));
-    interactiveSystemInstance->MockCommunicationRecord = "物业经理-客户沟通";
-
-    complaintNormal->active();
-
-    assert((complaintNormal->getSituationExplain())[workerID1] == "worker1-情况说明");
-    assert((complaintNormal->getSituationExplain())[dispatcherID] == "dispatcher1-情况说明");
-    assert(complaintNormal->getCommunicationRecord() == "物业经理-客户沟通");
-
-    TEvaluteContent evaluateContent;
-    evaluateContent.ResponseTime = 5;
-    evaluateContent.Satisfaction = 5;
-    evaluateContent.ServiceAttitude = 5;
-
-    Evaluate* evaluateNormal = ReportSystemInstance->generateEvaluate(reportNormal, evaluateContent);
-    
-    evaluateNormal->active();
-    assert(evaluateNormal->getEvaluateContent() == evaluateContent);
 }

@@ -92,7 +92,7 @@ void Maintain::activityFinished(){
     time_t endTime;
     interactiveSystemInstance->getMockMaintainEndEvent(endTime, eventFlag);
 
-
+    Worker* tarWorker = DispatchSystemInstance->getWorkerByID(this->getWorkerID());
     this->setMaintainEndTime(endTime);
     switch (eventFlag)
     {
@@ -111,16 +111,19 @@ void Maintain::activityFinished(){
             Maintain newMaintain(getDispatcherID(), getWorkerID(), getCorReport());
 
             this->CorReport->insertActivity(newMaintain);
-            
+            tarWorker->setCurMaintain(&newMaintain);
             break;
         }
-        default:
+        case EMaintainFlag::Normal:
         {
-            DispatchSystemInstance->updateWorkerState(this->getWorkerID(), EWorkerState::Idle);
+            
+            tarWorker->setCurState(EWorkerState::Idle);
+            tarWorker->setCurMaintain(nullptr);
             break;
         }
 
     }
+    tarWorker->removeActivityIDList(this->getID());
     PerformanceSystemInstance->addWorkerLaborHour(getWorkerID(), getLaborHour());
 }
 

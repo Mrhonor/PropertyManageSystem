@@ -42,7 +42,7 @@ Evaluate* ReportSystem::generateEvaluate(Report* corReport, TEvaluteContent eval
     //生成评价
     Evaluate evaluation(evaluateContent);
 
-    (*corReport).insertActivity(evaluation);
+    corReport->insertActivity(evaluation);
 
     return &evaluation;
 }
@@ -52,7 +52,7 @@ Complaint* ReportSystem::generateComplaint(Report* corReport, std::string compla
     //生成投诉
     Complaint complaint(complaintContend);
 
-    (*corReport).insertActivity(complaint);
+    corReport->insertActivity(complaint);
 
     return &complaint;
 }

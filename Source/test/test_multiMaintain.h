@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void test_NormalWork(){
+void test_multiMaintain(){
     InteractiveSystem* interactiveSystemInstance = InteractiveSystem::getInstance();
     DispatchSystem* DispatchSystemInstance = DispatchSystem::getInstance();
     ReportSystem* ReportSystemInstance = ReportSystem::getInstance();
@@ -42,17 +42,23 @@ void test_NormalWork(){
     string workerID2 = "worker2";
     Worker worker2(workerID2, handleableSet2);
 
+    set<EFaultType> handleableSet3;
+    handleableSet3.insert(EFaultType::FaultType1);
+    handleableSet3.insert(EFaultType::FaultType2);
+    string workerID3 = "worker3";
+    Worker worker3(workerID3, handleableSet3);
+
     DispatchSystemInstance->addWorker(worker1);
     DispatchSystemInstance->addWorker(worker2);
+    DispatchSystemInstance->addWorker(worker3);
 
     time_t reportTime = mktime(&reportTimetm);
     Report* reportNormal = ReportSystemInstance->generateReport(ownerID, faultType, reportSource, reportTime);
 
-
     // 报修流程
     string dispatcherID = "dispatcher1";
     Maintain* normalMaintain = dynamic_cast<Maintain*>(DispatchSystemInstance->Dispatch(dispatcherID, *reportNormal));
-
+    string curWorkerID = ((Maintain*)(reportNormal->getCurActiveActivity()))->getWorkerID();
 
     struct tm MaintainStartTime = reportTimetm;
     MaintainStartTime.tm_hour = 8;
@@ -64,36 +70,12 @@ void test_NormalWork(){
     MaintainEndTime.tm_hour = 18;
     interactiveSystemInstance->MockMaintainEndTime = mktime(&MaintainEndTime);
 
-    interactiveSystemInstance->MaintainEndFlag = EMaintainFlag::Normal;
+    interactiveSystemInstance->MaintainEndFlag = EMaintainFlag::Unfinish;
 
     normalMaintain->active();
 
-    assert(normalMaintain->getWorkerID() == workerID1);
-    assert(normalMaintain->getDispatcherID() == dispatcherID);
-    assert(normalMaintain->getMaintainStartTime() == mktime(&MaintainStartTime));
-    assert(normalMaintain->getMaintainEndTime() == mktime(&MaintainEndTime));
-    assert(normalMaintain->getMaintainDescription() == interactiveSystemInstance->MockMaintainDescription);
+    assert(reportNormal->getFaultType() == EFaultType::FaultType1);
+    assert(((Maintain*)(reportNormal->getCurActiveActivity()))->getWorkerID() == curWorkerID);
 
-    // 投诉流程
-    Complaint* complaintNormal = ReportSystemInstance->generateComplaint(reportNormal, "投诉内容");
 
-    interactiveSystemInstance->MockSituationExplain.insert(pair<string, string>(workerID1, "worker1-情况说明"));
-    interactiveSystemInstance->MockSituationExplain.insert(pair<string, string>(dispatcherID, "dispatcher1-情况说明"));
-    interactiveSystemInstance->MockCommunicationRecord = "物业经理-客户沟通";
-
-    complaintNormal->active();
-
-    assert((complaintNormal->getSituationExplain())[workerID1] == "worker1-情况说明");
-    assert((complaintNormal->getSituationExplain())[dispatcherID] == "dispatcher1-情况说明");
-    assert(complaintNormal->getCommunicationRecord() == "物业经理-客户沟通");
-
-    TEvaluteContent evaluateContent;
-    evaluateContent.ResponseTime = 5;
-    evaluateContent.Satisfaction = 5;
-    evaluateContent.ServiceAttitude = 5;
-
-    Evaluate* evaluateNormal = ReportSystemInstance->generateEvaluate(reportNormal, evaluateContent);
-    
-    evaluateNormal->active();
-    assert(evaluateNormal->getEvaluateContent() == evaluateContent);
 }

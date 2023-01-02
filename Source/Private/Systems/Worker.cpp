@@ -1,9 +1,13 @@
 #include "Systems/Worker.h"
+#include <algorithm>
 
 Worker::Worker(std::string workerID, std::set<EFaultType> handleSet)
 {
     ID = workerID;
     HandleableFaultType = handleSet;
+    CurState = EWorkerState::Idle;
+    CurMaintain = nullptr;
+    ActivityIDList.clear();
 }
 
 Worker::~Worker(){
@@ -44,4 +48,12 @@ bool Worker::checkHandleable(EFaultType faultType)
 std::string Worker::getWorkerID()
 {
     return ID;
+}
+
+void Worker::addActivityIDList(std::string newActivity){
+    this->ActivityIDList.push_back(newActivity);
+}
+
+void Worker::removeActivityIDList(std::string targetID){
+    std::remove(this->ActivityIDList.begin(), this->ActivityIDList.end(), targetID);
 }

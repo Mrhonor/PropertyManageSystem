@@ -114,6 +114,7 @@ void Report::getRelatePersonID(std::set<std::string>& ret){
         if(i.getActivityType()==EActivityType::MaintainType){
              
             ret.insert(((Maintain*)&i)->getWorkerID());
+            ret.insert(((Maintain*)&i)->getDispatcherID());
         }
     }
 }

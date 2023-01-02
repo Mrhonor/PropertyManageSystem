@@ -31,7 +31,7 @@ public:
     void updateWorkerState(std::string workerID, EWorkerState state);
 
     //
-    int getWorkerIdxByID(std::string workerID);
+    Worker* getWorkerByID(std::string workerID);
 };
 
 

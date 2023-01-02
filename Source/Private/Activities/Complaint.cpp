@@ -1,6 +1,7 @@
 #include "Activities/Complaint.h"
 #include "Systems/Report.h"
 #include "Systems/InteractiveSystem.h"
+#include "Systems/DispatchSystem.h"
 
 using namespace std;
 
@@ -52,9 +53,15 @@ void Complaint::activityStart(){
     set<string> relatedIDs;
     this->CurReport->getRelatePersonID(relatedIDs);
     InteractiveSystem* interactiveSystemInstance = InteractiveSystem::getInstance();
+    DispatchSystem* DispatchSystemInstance = DispatchSystem::getInstance();
     for(auto &i : relatedIDs){
         string explain = interactiveSystemInstance->getMockSituationExplain(i);
         this->insertSituationExplain(i, explain);
+
+        Worker* relatedWorker = DispatchSystemInstance->getWorkerByID(i);
+        if(relatedWorker != nullptr){
+            relatedWorker->addActivityIDList(this->getID());
+        }
     }
     
 }
@@ -67,5 +74,14 @@ void Complaint::activityExecute(){
 }
 
 void Complaint::activityFinished(){
-    
+    set<string> relatedIDs;
+    this->CurReport->getRelatePersonID(relatedIDs);
+    DispatchSystem* DispatchSystemInstance = DispatchSystem::getInstance();
+    for(auto &i : relatedIDs){
+        Worker* relatedWorker = DispatchSystemInstance->getWorkerByID(i);
+        if(relatedWorker != nullptr){
+            relatedWorker->removeActivityIDList(this->getID());
+        }
+    }
 }
+
