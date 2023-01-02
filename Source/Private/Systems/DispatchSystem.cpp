@@ -5,6 +5,8 @@
 #include "Activities/Activity.h"
 #include "Activities/Maintain.h"
 
+// using namespace std;
+
 DispatchSystem* DispatchSystem::Instance = nullptr;
 
 DispatchSystem* DispatchSystem::getInstance(){
@@ -27,6 +29,7 @@ Activity* DispatchSystem::Dispatch(std::string dispatcherID, Report& dispatchRep
     int selectedWorker = -1;
     for (int i = 0; i<WorkerList.size(); i++)
     {
+        std::cout << dispatchReport.getFaultType() << std::endl;
         faultType = dispatchReport.getFaultType();
         if (WorkerList[i].checkHandleable(faultType))
         {
@@ -34,7 +37,6 @@ Activity* DispatchSystem::Dispatch(std::string dispatcherID, Report& dispatchRep
             break;
         }
     }
-
     if (selectedWorker < 0)
     {
         //不应该走到这里！！
@@ -43,7 +45,6 @@ Activity* DispatchSystem::Dispatch(std::string dispatcherID, Report& dispatchRep
 
     WorkerList[selectedWorker].setCurState(Working);
     workerID = WorkerList[selectedWorker].getWorkerID();
-    
     Maintain activity(dispatcherID, workerID, &dispatchReport);
     dispatchReport.insertActivity(activity);
 

@@ -1,6 +1,9 @@
 #include "Systems/Report.h"
 #include "Activities/Maintain.h"
 #include "Activities/Activity.h"
+#include <iostream>
+
+using namespace std;
 
 Report::Report(std::string reportID)
 {
@@ -24,7 +27,8 @@ std::string Report::getOwnerID()
 
 EFaultType Report::getFaultType()
 {
-    return FaultType;
+    cout << this->FaultType << endl;
+    return this->FaultType;
 }
 
 void Report::setFaultType(EFaultType faultType)

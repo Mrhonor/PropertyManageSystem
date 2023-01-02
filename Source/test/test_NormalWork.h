@@ -10,10 +10,13 @@
 
 #include "Public.h"
 #include <cassert>
+#include <cstring>
+#include <iostream>
 
 using namespace std;
 
 void test_NormalWork(){
+    printf("1\n");
     InteractiveSystem* interactiveSystemInstance = InteractiveSystem::getInstance();
     DispatchSystem* DispatchSystemInstance = DispatchSystem::getInstance();
     ReportSystem* ReportSystemInstance = ReportSystem::getInstance();
@@ -51,15 +54,18 @@ void test_NormalWork(){
 
     // 报修流程
     string dispatcherID = "dispatcher1";
-    Maintain* normalMaintain = dynamic_cast<Maintain*>(DispatchSystemInstance->Dispatch(dispatcherID, *reportNormal));
+    Maintain* normalMaintain;
 
+    Activity* activity = DispatchSystemInstance->Dispatch(dispatcherID, *reportNormal);
+
+    normalMaintain = dynamic_cast<Maintain*>(activity);
 
     struct tm MaintainStartTime = reportTimetm;
     MaintainStartTime.tm_hour = 8;
 
     interactiveSystemInstance->MockMaintainStartTime = mktime(&MaintainStartTime);
     interactiveSystemInstance->MockMaintainDescription = "ok";
-
+    printf("3\n");
     struct tm MaintainEndTime = reportTimetm;
     MaintainEndTime.tm_hour = 18;
     interactiveSystemInstance->MockMaintainEndTime = mktime(&MaintainEndTime);
@@ -67,7 +73,7 @@ void test_NormalWork(){
     interactiveSystemInstance->MaintainEndFlag = EMaintainFlag::Normal;
 
     normalMaintain->active();
-
+    printf("4\n");
     assert(normalMaintain->getWorkerID() == workerID1);
     assert(normalMaintain->getDispatcherID() == dispatcherID);
     assert(normalMaintain->getMaintainStartTime() == mktime(&MaintainStartTime));
@@ -82,9 +88,9 @@ void test_NormalWork(){
     interactiveSystemInstance->MockCommunicationRecord = "物业经理-客户沟通";
 
     complaintNormal->active();
-
-    assert((complaintNormal->getSituationExplain())[workerID1] == "worker1-情况说明");
-    assert((complaintNormal->getSituationExplain())[dispatcherID] == "dispatcher1-情况说明");
+    auto SituationExplain = complaintNormal->getSituationExplain();
+    assert(SituationExplain[workerID1] == "worker1-情况说明");
+    assert(SituationExplain[dispatcherID] == "dispatcher1-情况说明");
     assert(complaintNormal->getCommunicationRecord() == "物业经理-客户沟通");
 
     TEvaluteContent evaluateContent;
@@ -95,5 +101,6 @@ void test_NormalWork(){
     Evaluate* evaluateNormal = ReportSystemInstance->generateEvaluate(reportNormal, evaluateContent);
     
     evaluateNormal->active();
-    assert(evaluateNormal->getEvaluateContent() == evaluateContent);
+    TEvaluteContent testEvaluateContent = evaluateNormal->getEvaluateContent();
+    assert(!memcmp(&(testEvaluateContent), &evaluateContent, sizeof(TEvaluteContent)));
 }

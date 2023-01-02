@@ -21,7 +21,7 @@ protected:
 public:
     static ReportSystem* getInstance();
 
-    ~ReportSystem();
+    ~ReportSystem(){};
 
     // 生成报修
     Report* generateReport(std::string ownerID, EFaultType faultType, EReportSource reportSource, std::time_t reportTime);

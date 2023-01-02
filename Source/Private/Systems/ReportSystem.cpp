@@ -14,9 +14,6 @@ ReportSystem* ReportSystem::getInstance(){
     return Instance;
 }
 
-ReportSystem::~ReportSystem(){
-    
-}
 
 Report* ReportSystem::generateReport(std::string ownerID,
                                     EFaultType faultType,
@@ -34,7 +31,9 @@ Report* ReportSystem::generateReport(std::string ownerID,
     report.setReportSource(reportSource);
     report.setReportTime(reportTime);
 
-    return &report;
+    ReportList.push_back(report);
+
+    return &ReportList.back();
 }
 
 Evaluate* ReportSystem::generateEvaluate(Report* corReport, TEvaluteContent evaluateContent)
