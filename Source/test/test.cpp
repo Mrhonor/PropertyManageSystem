@@ -2,6 +2,8 @@
 #include "test/test_multiMaintain.h"
 #include "test/test_multiDispatch.h"
 #include "test/test_worker.h"
+#include "test/test_report.h"
+#include "test/test_dispatch.h"
 
 int main(){
     cout << "test_NormalWork : ";
@@ -18,5 +20,13 @@ int main(){
 
     cout << "test_worker : ";
     test_worker();
+    cout << " Successed! " << endl;
+
+    cout << "test_report : ";
+    test_report();
+    cout << " Successed! " << endl;
+
+    cout << "test_dispatch : ";
+    test_Dispatch();
     cout << " Successed! " << endl;
 }

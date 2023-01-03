@@ -108,6 +108,7 @@ time_t Report::countAllWorkTime()
         {
             allWorkTime += ((Maintain*)activity)->getLaborHour();
         }
+        
     }
 
     return allWorkTime;

@@ -87,13 +87,12 @@ void test_report(){
     interactiveSystemInstance->MockMaintainDescription = "ok";
 
     struct tm MaintainEndTime2 = reportTimetm;
-    MaintainStartTime2.tm_mday = 2;
+    MaintainEndTime2.tm_mday = 2;
     MaintainEndTime2.tm_hour = 18;
     interactiveSystemInstance->MockMaintainEndTime = mktime(&MaintainEndTime2);
 
     interactiveSystemInstance->MaintainEndFlag = EMaintainFlag::Normal;
     reportNormal->getCurActiveActivity()->active();
-
     assert(reportNormal->countAllWorkTime() / 3600 == 14);
 
     InteractiveSystem::DestoryInstance();
