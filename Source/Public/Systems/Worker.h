@@ -34,6 +34,8 @@ public:
     void addActivityIDList(std::string);
 
     void removeActivityIDList(std::string);
+
+    std::vector<std::string> getActivityIDList();
 };
 
 

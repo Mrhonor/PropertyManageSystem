@@ -5,9 +5,10 @@
 
 using namespace std;
 
-Complaint::Complaint(string content):Activity(),ComplaintContent(content),
+Complaint::Complaint(string content, Report* corReport):Activity(),ComplaintContent(content),
 CommunicationRecord("空"){
     this->ActivityType = EActivityType::ComplaintType;
+    this->CorReport = corReport;
 }
 
 Complaint::~Complaint(){
@@ -51,9 +52,10 @@ void Complaint::eraseSituationExplain(string workerID){
 
 void Complaint::activityStart(){
     set<string> relatedIDs;
-    this->CurReport->getRelatePersonID(relatedIDs);
+    this->CorReport->getRelatePersonID(relatedIDs);
     InteractiveSystem* interactiveSystemInstance = InteractiveSystem::getInstance();
     DispatchSystem* DispatchSystemInstance = DispatchSystem::getInstance();
+
     for(auto &i : relatedIDs){
         string explain = interactiveSystemInstance->getMockSituationExplain(i);
         this->insertSituationExplain(i, explain);
@@ -63,7 +65,7 @@ void Complaint::activityStart(){
             relatedWorker->addActivityIDList(this->getID());
         }
     }
-    
+
 }
 
 
@@ -71,11 +73,12 @@ void Complaint::activityExecute(){
     // this->curReport
     InteractiveSystem* interactiveSystemInstance = InteractiveSystem::getInstance();
     this->setCommunicationRecord(interactiveSystemInstance->getMockCommunicationRecord()); 
+
 }
 
 void Complaint::activityFinished(){
     set<string> relatedIDs;
-    this->CurReport->getRelatePersonID(relatedIDs);
+    this->CorReport->getRelatePersonID(relatedIDs);
     DispatchSystem* DispatchSystemInstance = DispatchSystem::getInstance();
     for(auto &i : relatedIDs){
         Worker* relatedWorker = DispatchSystemInstance->getWorkerByID(i);

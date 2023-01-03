@@ -35,12 +35,12 @@ void test_multiDispatch(){
     set<EFaultType> handleableSet1;
     handleableSet1.insert(EFaultType::FaultType1);
     string workerID1 = "worker1";
-    Worker worker1(workerID1, handleableSet1);
+    Worker* worker1 = new Worker(workerID1, handleableSet1);
 
     set<EFaultType> handleableSet2;
     handleableSet2.insert(EFaultType::FaultType2);
     string workerID2 = "worker2";
-    Worker worker2(workerID2, handleableSet2);
+    Worker* worker2 = new Worker(workerID2, handleableSet2);
 
     DispatchSystemInstance->addWorker(worker1);
     DispatchSystemInstance->addWorker(worker2);
@@ -74,5 +74,7 @@ void test_multiDispatch(){
     assert(reportNormal->getFaultType() == EFaultType::FaultType2);
     assert(((Maintain*)(reportNormal->getCurActiveActivity()))->getWorkerID() == workerID2);
 
-
+    InteractiveSystem::DestoryInstance();
+    DispatchSystem::DestoryInstance();
+    ReportSystem::DestoryInstance();
 }

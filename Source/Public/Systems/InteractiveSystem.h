@@ -8,12 +8,14 @@ class InteractiveSystem
 {
 protected:
     InteractiveSystem(){};
+    ~InteractiveSystem(){};
 
     static InteractiveSystem* Instance;
     
 
 public:
     static InteractiveSystem* getInstance();
+    static void DestoryInstance();
 
     std::map<std::string, std::string> MockSituationExplain;
     
@@ -30,8 +32,6 @@ public:
     std::time_t MockMaintainEndTime;
 
     std::string MockDispatcherID;
-
-    ~InteractiveSystem(){};
 
     std::string getMockSituationExplain(std::string);
     

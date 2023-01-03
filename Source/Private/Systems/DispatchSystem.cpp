@@ -16,8 +16,21 @@ DispatchSystem* DispatchSystem::getInstance(){
     return Instance;
 }
 
+void DispatchSystem::DestoryInstance(){
+    if(Instance != nullptr){
+        delete Instance;
+        Instance = nullptr;
+    }
+}
+
+DispatchSystem::~DispatchSystem(){
+    for(auto i : this->WorkerList){
+        delete i;
+    }
+}
+
 //添加工人
-int DispatchSystem::addWorker(Worker &worker)
+int DispatchSystem::addWorker(Worker *worker)
 {
     WorkerList.push_back(worker);
 }
@@ -29,9 +42,8 @@ Activity* DispatchSystem::Dispatch(std::string dispatcherID, Report& dispatchRep
     int selectedWorker = -1;
     for (int i = 0; i<WorkerList.size(); i++)
     {
-        std::cout << dispatchReport.getFaultType() << std::endl;
         faultType = dispatchReport.getFaultType();
-        if (WorkerList[i].checkHandleable(faultType))
+        if (WorkerList[i]->checkHandleable(faultType))
         {
             selectedWorker = i;
             break;
@@ -43,12 +55,15 @@ Activity* DispatchSystem::Dispatch(std::string dispatcherID, Report& dispatchRep
         std::cout<<"Dispatch Failed"<<std::endl;
     }
 
-    WorkerList[selectedWorker].setCurState(Working);
-    workerID = WorkerList[selectedWorker].getWorkerID();
-    Maintain activity(dispatcherID, workerID, &dispatchReport);
+    WorkerList[selectedWorker]->setCurState(Working);
+
+    workerID = WorkerList[selectedWorker]->getWorkerID();
+    Maintain* activity = new Maintain(dispatcherID, workerID, &dispatchReport);
+    WorkerList[selectedWorker]->setCurMaintain(activity);
+    WorkerList[selectedWorker]->addActivityIDList(activity->getID());
     dispatchReport.insertActivity(activity);
 
-    return &activity;
+    return activity;
 }
 
 void DispatchSystem::updateWorkerState(std::string workerID, EWorkerState state)
@@ -69,9 +84,9 @@ Worker* DispatchSystem::getWorkerByID(std::string workerID)
 {
     for (int i=0; i<WorkerList.size(); i++)
     {
-        if (WorkerList[i].getWorkerID() == workerID)
+        if (WorkerList[i]->getWorkerID() == workerID)
         {
-            return &WorkerList[i];
+            return WorkerList[i];
         }
     }
 

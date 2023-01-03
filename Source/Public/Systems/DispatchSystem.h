@@ -10,8 +10,9 @@ class Maintain;
 class DispatchSystem
 {
 protected:
-    std::vector<Worker> WorkerList;
+    std::vector<Worker*> WorkerList;
     DispatchSystem(){};
+    ~DispatchSystem();
 
     static DispatchSystem* Instance;
     
@@ -19,19 +20,21 @@ public:
 
     static DispatchSystem* getInstance();
 
-    ~DispatchSystem(){};
+    static void DestoryInstance();
 
     // 调度函数
     Activity* Dispatch(std::string dispatcherID, Report& dispatchReport);
 
     // 添加worker
-    int addWorker(Worker &worker);
+    int addWorker(Worker *worker);
 
     // 更新worker状态
     void updateWorkerState(std::string workerID, EWorkerState state);
 
     //
     Worker* getWorkerByID(std::string workerID);
+
+    // std::vector<Worker>
 };
 
 

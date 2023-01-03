@@ -18,12 +18,12 @@ protected:
     // 与客户沟通结果
     std::string CommunicationRecord;
 
-    Report* CurReport;
+    Report* CorReport;
 
     void getRelatePersonID(std::set<std::string>&);
 
 public:
-    Complaint(std::string);
+    Complaint(std::string, Report* corReport);
     ~Complaint();
 
     virtual void activityStart();

@@ -53,8 +53,8 @@ time_t Maintain::getMaintainEndTime(){
     return this->MaintainRecord.MaintainEndTime;
 }
 
-void Maintain::setMaintainEndTime(time_t newMaintainStartTime){
-    this->MaintainRecord.MaintainStartTime = newMaintainStartTime;
+void Maintain::setMaintainEndTime(time_t newMaintainEndTime){
+    this->MaintainRecord.MaintainEndTime = newMaintainEndTime;
 }
 
 Report* Maintain::getCorReport(){
@@ -108,10 +108,10 @@ void Maintain::activityFinished(){
         }
         case EMaintainFlag::Unfinish:
         {
-            Maintain newMaintain(getDispatcherID(), getWorkerID(), getCorReport());
+            Maintain* newMaintain = new Maintain(getDispatcherID(), getWorkerID(), getCorReport());
 
             this->CorReport->insertActivity(newMaintain);
-            tarWorker->setCurMaintain(&newMaintain);
+            tarWorker->setCurMaintain(newMaintain);
             break;
         }
         case EMaintainFlag::Normal:

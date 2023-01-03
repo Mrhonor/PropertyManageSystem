@@ -1,9 +1,11 @@
 #ifndef __PUBLIC__
 #define __PUBLIC__
+#pragma once
 
 #include <string>
 #include <vector>
 #include <ctime>
+#include <iostream>
 
 // 故障类型
 typedef enum{
@@ -52,5 +54,9 @@ typedef enum{
     FaultTypeWrong,
     Unfinish
 }EMaintainFlag;
+
+
+
+
 
 #endif // __ACTIVTITY__

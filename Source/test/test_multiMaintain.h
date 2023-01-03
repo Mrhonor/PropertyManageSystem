@@ -31,22 +31,21 @@ void test_multiMaintain(){
     reportTimetm.tm_wday = 6;
     reportTimetm.tm_yday = 0;
     reportTimetm.tm_isdst = 0;
-
     set<EFaultType> handleableSet1;
     handleableSet1.insert(EFaultType::FaultType1);
     string workerID1 = "worker1";
-    Worker worker1(workerID1, handleableSet1);
+    Worker* worker1 = new Worker(workerID1, handleableSet1);
 
     set<EFaultType> handleableSet2;
     handleableSet2.insert(EFaultType::FaultType2);
     string workerID2 = "worker2";
-    Worker worker2(workerID2, handleableSet2);
+    Worker* worker2 = new Worker(workerID2, handleableSet2);
 
     set<EFaultType> handleableSet3;
     handleableSet3.insert(EFaultType::FaultType1);
     handleableSet3.insert(EFaultType::FaultType2);
     string workerID3 = "worker3";
-    Worker worker3(workerID3, handleableSet3);
+    Worker* worker3 = new Worker(workerID3, handleableSet3);
 
     DispatchSystemInstance->addWorker(worker1);
     DispatchSystemInstance->addWorker(worker2);
@@ -54,7 +53,7 @@ void test_multiMaintain(){
 
     time_t reportTime = mktime(&reportTimetm);
     Report* reportNormal = ReportSystemInstance->generateReport(ownerID, faultType, reportSource, reportTime);
-
+    
     // 报修流程
     string dispatcherID = "dispatcher1";
     Maintain* normalMaintain = dynamic_cast<Maintain*>(DispatchSystemInstance->Dispatch(dispatcherID, *reportNormal));
@@ -77,5 +76,7 @@ void test_multiMaintain(){
     assert(reportNormal->getFaultType() == EFaultType::FaultType1);
     assert(((Maintain*)(reportNormal->getCurActiveActivity()))->getWorkerID() == curWorkerID);
 
-
+    InteractiveSystem::DestoryInstance();
+    DispatchSystem::DestoryInstance();
+    ReportSystem::DestoryInstance();
 }

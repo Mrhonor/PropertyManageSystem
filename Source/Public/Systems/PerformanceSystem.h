@@ -8,6 +8,7 @@ class PerformanceSystem
 {
 protected:
     PerformanceSystem(){};
+    ~PerformanceSystem(){};
 
     static PerformanceSystem* Instance;
     // key：工人ID， 总工时
@@ -17,7 +18,7 @@ protected:
 public:
     static PerformanceSystem* getInstance();
 
-    ~PerformanceSystem(){};
+    static void DestoryInstance();
 
 
     time_t getWorkerLaborHour(std::string);

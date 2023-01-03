@@ -12,6 +12,13 @@ PerformanceSystem* PerformanceSystem::getInstance()
     return Instance;
 }
 
+void PerformanceSystem::DestoryInstance(){
+    if(Instance != nullptr){
+        delete Instance;
+        Instance = nullptr;
+    }
+}
+
 time_t PerformanceSystem::getWorkerLaborHour(std::string workerID)
 {
     return LaborHourMap.find(workerID) == LaborHourMap.end()? 0:LaborHourMap[workerID];

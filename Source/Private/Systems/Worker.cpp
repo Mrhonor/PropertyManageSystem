@@ -55,5 +55,11 @@ void Worker::addActivityIDList(std::string newActivity){
 }
 
 void Worker::removeActivityIDList(std::string targetID){
-    std::remove(this->ActivityIDList.begin(), this->ActivityIDList.end(), targetID);
+    auto iter = std::remove(this->ActivityIDList.begin(), this->ActivityIDList.end(), targetID);
+    this->ActivityIDList.erase(iter, std::end(this->ActivityIDList));//Remove surplus elements
+
+}
+
+std::vector<std::string> Worker::getActivityIDList(){
+    return ActivityIDList;
 }

@@ -36,17 +36,17 @@ void test_worker(){
     set<EFaultType> handleableSet1;
     handleableSet1.insert(EFaultType::FaultType1);
     string workerID1 = "worker1";
-    Worker worker1(workerID1, handleableSet1);
+    Worker* worker1 = new Worker(workerID1, handleableSet1);
 
     set<EFaultType> handleableSet2;
     handleableSet2.insert(EFaultType::FaultType2);
     string workerID2 = "worker2";
-    Worker worker2(workerID2, handleableSet2);
+    Worker* worker2 = new Worker(workerID2, handleableSet2);
 
     set<EFaultType> handleableSet3;
     handleableSet3.insert(EFaultType::FaultType1);
     string workerID3 = "worker3";
-    Worker worker3(workerID3, handleableSet3);
+    Worker* worker3 = new Worker(workerID3, handleableSet3);
 
     DispatchSystemInstance->addWorker(worker1);
     DispatchSystemInstance->addWorker(worker2);
@@ -58,6 +58,7 @@ void test_worker(){
     // 报修流程
     string dispatcherID = "dispatcher1";
     Maintain* normalMaintain = dynamic_cast<Maintain*>(DispatchSystemInstance->Dispatch(dispatcherID, *reportNormal));
+
     string curWorkerID = ((Maintain*)(reportNormal->getCurActiveActivity()))->getWorkerID();
 
     struct tm MaintainStartTime = reportTimetm;
@@ -72,14 +73,32 @@ void test_worker(){
 
     interactiveSystemInstance->MaintainEndFlag = EMaintainFlag::Normal;
 
-    assert(worker2.getCurState() == EWorkerState::Working);
-    assert(worker2.getCurMaintain() == normalMaintain);
+
+    assert(worker2->getCurState() == EWorkerState::Working);
+    assert(worker2->getCurMaintain() == normalMaintain);
 
 
-    normalMaintain->active();
+    normalMaintain->activityStart();
+    assert(worker2->getActivityIDList().back() == normalMaintain->getID());
+    normalMaintain->activityExecute();
+    normalMaintain->activityFinished();
+    assert(worker2->getCurState() == EWorkerState::Idle);
+    assert(worker2->getCurMaintain() == nullptr);;
 
-    assert(worker2.getCurState() == EWorkerState::Idle);
-    assert(worker2.getCurMaintain() == nullptr);;
+    // 投诉流程
+    Complaint* complaintNormal = ReportSystemInstance->generateComplaint(reportNormal, "投诉内容");
 
+    interactiveSystemInstance->MockSituationExplain.insert(pair<string, string>(workerID2, "worker2-情况说明"));
+    interactiveSystemInstance->MockSituationExplain.insert(pair<string, string>(dispatcherID, "dispatcher1-情况说明"));
+    interactiveSystemInstance->MockCommunicationRecord = "物业经理-客户沟通";
 
+    complaintNormal->activityStart();    
+    assert(worker2->getActivityIDList().back() == complaintNormal->getID());
+    complaintNormal->activityExecute();
+    complaintNormal->activityFinished();
+    assert(worker2->getActivityIDList().size() == 0);
+
+    InteractiveSystem::DestoryInstance();
+    DispatchSystem::DestoryInstance();
+    ReportSystem::DestoryInstance();
 }

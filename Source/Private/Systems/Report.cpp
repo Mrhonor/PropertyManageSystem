@@ -10,6 +10,13 @@ Report::Report(std::string reportID)
     ID = reportID;
 }
 
+Report::~Report(){
+    
+    for(auto i : this->ActivityList){
+        delete i;
+    }
+}
+
 std::string Report::getID()
 {
     return ID;
@@ -27,7 +34,6 @@ std::string Report::getOwnerID()
 
 EFaultType Report::getFaultType()
 {
-    cout << this->FaultType << endl;
     return this->FaultType;
 }
 
@@ -61,18 +67,18 @@ Activity* Report::getCurActiveActivity()
     Activity* curActivity = nullptr;
     for(auto activity:ActivityList)
     {
-        EActivityType actType = activity.getActivityType();
+        EActivityType actType = activity->getActivityType();
 
         if (actType == MaintainType)
         {
-            curActivity = &activity;
+            curActivity = activity;
         }
     }
 
     return curActivity;
 }
 
-const std::vector<Activity>& Report::getActivityList()
+const std::vector<Activity*>& Report::getActivityList()
 {
     return ActivityList;
 }
@@ -82,10 +88,10 @@ std::vector<TMaintainRecord> Report::getMaintainRecords()
     std::vector<TMaintainRecord> maintainReords;
     for (auto activity:ActivityList)
     {
-        if (activity.getActivityType() == MaintainType)
+        if (activity->getActivityType() == MaintainType)
         {
             TMaintainRecord mainrainRecord;
-            mainrainRecord = ((Maintain*)&activity)->getMaintainRecord();
+            mainrainRecord = ((Maintain*)activity)->getMaintainRecord();
             maintainReords.push_back(mainrainRecord);
         }
     }
@@ -98,27 +104,27 @@ time_t Report::countAllWorkTime()
     time_t allWorkTime = 0;
     for (auto activity:ActivityList)
     {
-        if (activity.getActivityType() == MaintainType)
+        if (activity->getActivityType() == MaintainType)
         {
-            allWorkTime += ((Maintain*)&activity)->getLaborHour();
+            allWorkTime += ((Maintain*)activity)->getLaborHour();
         }
     }
 
     return allWorkTime;
 }
 
-void Report::insertActivity(Activity &activity)
+void Report::insertActivity(Activity *activity)
 {
     ActivityList.push_back(activity);
 }
 
 void Report::getRelatePersonID(std::set<std::string>& ret){
-    // auto activityList = this->getActivityList();
-    for(auto &i : ActivityList){
-        if(i.getActivityType()==EActivityType::MaintainType){
+
+    for(auto i : ActivityList){
+        if(i->getActivityType()==EActivityType::MaintainType){
              
-            ret.insert(((Maintain*)&i)->getWorkerID());
-            ret.insert(((Maintain*)&i)->getDispatcherID());
+            ret.insert(((Maintain*)i)->getWorkerID());
+            ret.insert(((Maintain*)i)->getDispatcherID());
         }
     }
 }

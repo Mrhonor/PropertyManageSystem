@@ -11,6 +11,14 @@ InteractiveSystem* InteractiveSystem::getInstance(){
     return Instance;
 }
 
+void InteractiveSystem::DestoryInstance(){
+    if(Instance != nullptr){
+        delete Instance;
+        Instance = nullptr;
+    }
+}
+
+
 string InteractiveSystem::getMockSituationExplain(string key){
     return this->MockSituationExplain[key];
 }

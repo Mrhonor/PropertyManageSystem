@@ -16,7 +16,7 @@
 using namespace std;
 
 void test_NormalWork(){
-    printf("1\n");
+    
     InteractiveSystem* interactiveSystemInstance = InteractiveSystem::getInstance();
     DispatchSystem* DispatchSystemInstance = DispatchSystem::getInstance();
     ReportSystem* ReportSystemInstance = ReportSystem::getInstance();
@@ -38,19 +38,18 @@ void test_NormalWork(){
     set<EFaultType> handleableSet1;
     handleableSet1.insert(EFaultType::FaultType1);
     string workerID1 = "worker1";
-    Worker worker1(workerID1, handleableSet1);
+    Worker* worker1 = new Worker(workerID1, handleableSet1);
 
     set<EFaultType> handleableSet2;
     handleableSet2.insert(EFaultType::FaultType2);
     string workerID2 = "worker2";
-    Worker worker2(workerID2, handleableSet2);
+    Worker* worker2 = new Worker(workerID2, handleableSet2);
 
     DispatchSystemInstance->addWorker(worker1);
     DispatchSystemInstance->addWorker(worker2);
 
     time_t reportTime = mktime(&reportTimetm);
     Report* reportNormal = ReportSystemInstance->generateReport(ownerID, faultType, reportSource, reportTime);
-
 
     // 报修流程
     string dispatcherID = "dispatcher1";
@@ -60,12 +59,13 @@ void test_NormalWork(){
 
     normalMaintain = dynamic_cast<Maintain*>(activity);
 
+
     struct tm MaintainStartTime = reportTimetm;
     MaintainStartTime.tm_hour = 8;
 
     interactiveSystemInstance->MockMaintainStartTime = mktime(&MaintainStartTime);
     interactiveSystemInstance->MockMaintainDescription = "ok";
-    printf("3\n");
+
     struct tm MaintainEndTime = reportTimetm;
     MaintainEndTime.tm_hour = 18;
     interactiveSystemInstance->MockMaintainEndTime = mktime(&MaintainEndTime);
@@ -73,7 +73,7 @@ void test_NormalWork(){
     interactiveSystemInstance->MaintainEndFlag = EMaintainFlag::Normal;
 
     normalMaintain->active();
-    printf("4\n");
+
     assert(normalMaintain->getWorkerID() == workerID1);
     assert(normalMaintain->getDispatcherID() == dispatcherID);
     assert(normalMaintain->getMaintainStartTime() == mktime(&MaintainStartTime));
@@ -87,7 +87,7 @@ void test_NormalWork(){
     interactiveSystemInstance->MockSituationExplain.insert(pair<string, string>(dispatcherID, "dispatcher1-情况说明"));
     interactiveSystemInstance->MockCommunicationRecord = "物业经理-客户沟通";
 
-    complaintNormal->active();
+    complaintNormal->active();    
     auto SituationExplain = complaintNormal->getSituationExplain();
     assert(SituationExplain[workerID1] == "worker1-情况说明");
     assert(SituationExplain[dispatcherID] == "dispatcher1-情况说明");
@@ -99,8 +99,14 @@ void test_NormalWork(){
     evaluateContent.ServiceAttitude = 5;
 
     Evaluate* evaluateNormal = ReportSystemInstance->generateEvaluate(reportNormal, evaluateContent);
-    
+
     evaluateNormal->active();
+
     TEvaluteContent testEvaluateContent = evaluateNormal->getEvaluateContent();
+
     assert(!memcmp(&(testEvaluateContent), &evaluateContent, sizeof(TEvaluteContent)));
+
+    InteractiveSystem::DestoryInstance();
+    DispatchSystem::DestoryInstance();
+    ReportSystem::DestoryInstance();
 }

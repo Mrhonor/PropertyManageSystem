@@ -11,7 +11,7 @@ class Report
 {
 protected:
     // 活动列表：存储当前报修下的所有类型的活动
-    std::vector<Activity> ActivityList;
+    std::vector<Activity*> ActivityList;
 
     // 报修ID
     std::string ID;
@@ -30,7 +30,7 @@ protected:
 
 public:
     Report(std::string reportID);
-    ~Report(){};
+    ~Report();
 
     std::string getID();
 
@@ -47,7 +47,7 @@ public:
     void setReportTime(std::time_t ReportTime);
 
     Activity* getCurActiveActivity();
-    const std::vector<Activity>& getActivityList();
+    const std::vector<Activity*>& getActivityList();
 
     // 获取维修记录
     //void getMaintainList(std::vector<Maintain>&);
@@ -57,7 +57,7 @@ public:
     time_t countAllWorkTime();
 
     // 插入新的活动
-    void insertActivity(Activity &);
+    void insertActivity(Activity *);
 
     void getRelatePersonID(std::set<std::string>&);
 };                
