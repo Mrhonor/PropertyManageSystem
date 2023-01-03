@@ -13,11 +13,7 @@
 
 using namespace std;
 
-
-// 对于处理中的报修，知道当前活动的调度。
-// 统计处理一次报修已经用掉的工时
-void test_report(){
-        
+void test_Dispatch(){
     InteractiveSystem* interactiveSystemInstance = InteractiveSystem::getInstance();
     DispatchSystem* DispatchSystemInstance = DispatchSystem::getInstance();
     ReportSystem* ReportSystemInstance = ReportSystem::getInstance();
@@ -40,64 +36,31 @@ void test_report(){
     handleableSet1.insert(EFaultType::FaultType1);
     string workerID1 = "worker1";
     Worker* worker1 = new Worker(workerID1, handleableSet1);
+    worker1->setCurState(EWorkerState::Working);
 
     set<EFaultType> handleableSet2;
     handleableSet2.insert(EFaultType::FaultType2);
     string workerID2 = "worker2";
     Worker* worker2 = new Worker(workerID2, handleableSet2);
 
+    set<EFaultType> handleableSet3;
+    handleableSet3.insert(EFaultType::FaultType1);
+    string workerID3 = "worker3";
+    Worker* worker3 = new Worker(workerID3, handleableSet3);
+
     DispatchSystemInstance->addWorker(worker1);
     DispatchSystemInstance->addWorker(worker2);
+    DispatchSystemInstance->addWorker(worker3);
 
     time_t reportTime = mktime(&reportTimetm);
     Report* reportNormal = ReportSystemInstance->generateReport(ownerID, faultType, reportSource, reportTime);
 
-
-    // 报修流程
     string dispatcherID = "dispatcher1";
     Maintain* normalMaintain = dynamic_cast<Maintain*>(DispatchSystemInstance->Dispatch(dispatcherID, *reportNormal));
 
-    assert(reportNormal->getCurActiveActivity() == normalMaintain);
-
-    struct tm MaintainStartTime = reportTimetm;
-    MaintainStartTime.tm_hour = 8;
-
-    interactiveSystemInstance->MockMaintainStartTime = mktime(&MaintainStartTime);
-    interactiveSystemInstance->MockMaintainDescription = "ok";
-
-    struct tm MaintainEndTime = reportTimetm;
-    MaintainEndTime.tm_hour = 12;
-    interactiveSystemInstance->MockMaintainEndTime = mktime(&MaintainEndTime);
-
-    interactiveSystemInstance->MaintainEndFlag = EMaintainFlag::FaultTypeWrong;
-    interactiveSystemInstance->MockFaultType = EFaultType::FaultType2;
-    string dispatcherID2 = "dispatcher2";
-    interactiveSystemInstance->MockDispatcherID = dispatcherID2;
-
-    normalMaintain->active();
-
-    assert(reportNormal->getFaultType() == EFaultType::FaultType2);
-    assert(((Maintain*)(reportNormal->getCurActiveActivity()))->getWorkerID() == workerID2);
-
-    struct tm MaintainStartTime2 = reportTimetm;
-    MaintainStartTime2.tm_mday = 2;
-    MaintainStartTime2.tm_hour = 8;
-
-    interactiveSystemInstance->MockMaintainStartTime = mktime(&MaintainStartTime2);
-    interactiveSystemInstance->MockMaintainDescription = "ok";
-
-    struct tm MaintainEndTime2 = reportTimetm;
-    MaintainStartTime2.tm_mday = 2;
-    MaintainEndTime2.tm_hour = 18;
-    interactiveSystemInstance->MockMaintainEndTime = mktime(&MaintainEndTime2);
-
-    interactiveSystemInstance->MaintainEndFlag = EMaintainFlag::Normal;
-    reportNormal->getCurActiveActivity()->active();
-
-    assert(reportNormal->countAllWorkTime() / 3600 == 14);
+    assert(((Maintain*)(reportNormal->getCurActiveActivity()))->getWorkerID() == workerID3);
 
     InteractiveSystem::DestoryInstance();
     DispatchSystem::DestoryInstance();
     ReportSystem::DestoryInstance();
-
 }

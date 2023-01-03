@@ -34,7 +34,6 @@ public:
     //
     Worker* getWorkerByID(std::string workerID);
 
-    // std::vector<Worker>
 };
 
 
